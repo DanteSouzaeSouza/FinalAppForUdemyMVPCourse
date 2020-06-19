@@ -61,17 +61,9 @@ public class TopMoviesRepository implements Repository {
 
         Observable<TopRated> topRatedObservable = movieApiService.getTopRatedMovies(1).concatWith(movieApiService.getTopRatedMovies(2)).concatWith(movieApiService.getTopRatedMovies(3));
 
-        return topRatedObservable.concatMap(new Function<TopRated, Observable<Result>>() {
-            @Override
-            public Observable<Result> apply(TopRated topRated) {
-                return Observable.fromIterable(topRated.results);
-            }
-        }).doOnNext(new Consumer<Result>() {
-            @Override
-            public void accept(Result result) {
-                results.add(result);
-            }
-        });
+        return topRatedObservable.concatMap(
+            (Function<TopRated, Observable<Result>>) topRated -> Observable.fromIterable(topRated.results)).doOnNext(
+            result -> results.add(result));
     }
 
     @Override
@@ -89,24 +81,11 @@ public class TopMoviesRepository implements Repository {
     @Override
     public Observable<String> getCountriesFromNetwork() {
 
-        return getResultsFromNetwork().concatMap(new Function<Result, Observable<OmdbApi>>() {
-            @Override
-            public Observable<OmdbApi> apply(Result result) {
-                return moreInfoApiService.getCountry(result.title, API_KEY);
-            }
-        }).concatMap(new Function<OmdbApi, Observable<String>>() {
-            @Override
-            public Observable<String> apply(OmdbApi omdbApi) {
-                return Observable.just(omdbApi.getCountry());
-            }
-        }).doOnNext(new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                countries.add(s);
-            }
-        }).doFinally(() -> {//Avoids Socket closed Exception!
-            isUpToDate();
-        });
+        //Avoids Socket closed Exception!
+        return getResultsFromNetwork().concatMap(
+            (Function<Result, Observable<OmdbApi>>) result -> moreInfoApiService.getCountry(result.title, API_KEY)).concatMap(
+            (Function<OmdbApi, Observable<String>>) omdbApi -> Observable.just(omdbApi.getCountry())).doOnNext(s -> countries.add(s)).doFinally(
+            this::isUpToDate);
 
     }
 

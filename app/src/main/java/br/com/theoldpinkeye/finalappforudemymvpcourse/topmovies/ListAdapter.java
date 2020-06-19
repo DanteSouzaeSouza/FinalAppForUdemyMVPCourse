@@ -1,6 +1,6 @@
 package br.com.theoldpinkeye.finalappforudemymvpcourse.topmovies;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +49,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItemViewHo
 
         public ListItemViewHolder(View itemView) {
             super(itemView);
-            itemName = (TextView) itemView.findViewById(R.id.textView_fragmentlist_task_name);
-            countryName = (TextView) itemView.findViewById(R.id.textView_fragmentlist_country_name);
+            itemName = itemView.findViewById(R.id.textView_fragmentlist_task_name);
+            countryName = itemView.findViewById(R.id.textView_fragmentlist_country_name);
         }
     }
 }

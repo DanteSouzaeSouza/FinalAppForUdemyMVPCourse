@@ -18,11 +18,7 @@ public class TopMoviesModel implements TopMoviesActivityMVP.Model {
 
     @Override
     public Observable<ViewModel> result() { //replaced Func2 with BiFunction according to RxJava2 specification
-        return Observable.zip(repository.getResultData(), repository.getCountryData(), new BiFunction<Result, String, ViewModel>() {
-            @Override
-            public ViewModel apply(Result result, String s) throws Exception {
-                return new ViewModel(result.title, s);
-            }
-        });
+        return Observable.zip(repository.getResultData(), repository.getCountryData(),
+            (result, s) -> new ViewModel(result.title, s));
     }
 }

@@ -1,6 +1,5 @@
 package br.com.theoldpinkeye.finalappforudemymvpcourse.topmovies;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 /**
